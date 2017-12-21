@@ -167,27 +167,32 @@ int main(int argc, char* argv[])
     }
 
     unsigned long long readResult[2] = {std::numeric_limits<unsigned long long>::max(), std::numeric_limits<unsigned long long>::min()};
+    unsigned long long avgRead = 0;
     unsigned long long writeResult[2] = {std::numeric_limits<unsigned long long>::max(), std::numeric_limits<unsigned long long>::min()};
+    unsigned long long avgWrite = 0;
 
     for(int iteration = 0; iteration < iterations; iteration++) {
         if(readRuntimes[iteration] < readResult[0])
             readResult[0] = readRuntimes[iteration];
         if(readRuntimes[iteration] > readResult[1])
             readResult[1] = readRuntimes[iteration];
+        avgRead += readRuntimes[iteration];
 
         if(writeRuntimes[iteration] < writeResult[0])
             writeResult[0] = writeRuntimes[iteration];
         if(writeRuntimes[iteration] > writeResult[1])
             writeResult[1] = writeRuntimes[iteration];
-        cout << "write " << iteration << " " << writeRuntimes[iteration] << endl;
-        cout << "read " << iteration << " " << readRuntimes[iteration] << endl;
+        avgWrite += writeRuntimes[iteration];
 
     }
 
+    avgWrite /= iterations;
+    avgRead /= iterations;
+
     auto totalMB  = totalAmountOfBytes / calculateMeasurementBytes('m');
 
-    cout << "READ:  min " << totalMB * 1000 / readResult[1] << "MB/s max " << totalMB * 1000 / readResult[0] << " MB/s" << endl;
-    cout << "WRITE: min " << totalMB * 1000 / writeResult[1] << "MB/s max " << totalMB * 1000 / writeResult[0] << " MB/s" << endl;
+    cout << "READ:  min " << totalMB * 1000 / readResult[1] << "MB/s max " << totalMB * 1000 / readResult[0] << " MB/s avg " << totalMB * 1000 / avgRead << "MB/s" << endl;
+    cout << "WRITE: min " << totalMB * 1000 / writeResult[1] << "MB/s max " << totalMB * 1000 / writeResult[0] << " MB/s avg " << totalMB * 1000 / avgWrite << "MB/s" << endl;
 
     if(removeFile && !remove(destination.c_str()))
         cout << "Could not remove " << destination << endl;
