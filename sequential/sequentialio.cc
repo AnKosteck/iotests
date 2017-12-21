@@ -194,7 +194,7 @@ int main(int argc, char* argv[])
     cout << "READ:  min " << totalMB * 1000 / readResult[1] << "MB/s max " << totalMB * 1000 / readResult[0] << " MB/s avg " << totalMB * 1000 / avgRead << "MB/s" << endl;
     cout << "WRITE: min " << totalMB * 1000 / writeResult[1] << "MB/s max " << totalMB * 1000 / writeResult[0] << " MB/s avg " << totalMB * 1000 / avgWrite << "MB/s" << endl;
 
-    if(removeFile && !remove(destination.c_str()))
+    if(removeFile && remove(destination.c_str()) != 0)
         cout << "Could not remove " << destination << endl;
 
     delete(outputString);
